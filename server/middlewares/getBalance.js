@@ -1,15 +1,21 @@
 const Registration = require('../models/rfid_register.model')
 
-const getBalance = () => {
-    var currentBalance = 0;
-    Registration.find({})
-    .then((getRegistrations) => {
-        currentBalance = parseInt(getRegistrations[0].initial_balance)
-        return currentBalance
-        // console.log(currentBalance)
+module.exports.addCardInfo = (req, res, next)=> {
+    const card_uuid = req.body.UUID;
+    Registration.findOne({UUID: card_uuid}).then(doc=> {
+        if(doc) {
+            req.card_info = doc;
+            return next();
+        }else{
+            return res.status(404).send({
+                message: "CARD NOT FOUND or SOMETHING WENT WRONG",
+                success: false
+            })
+        }
+    }).catch(err=> {
+        return res.status(404).send({
+            message: "CARD NOT FOUND or SOMETHING WENT WRONG",
+            success: false
+        })
     })
-    // return currentBalance
 }
-
-// module.exports = getBalance
-console.log(getBalance)

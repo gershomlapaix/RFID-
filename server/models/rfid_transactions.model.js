@@ -7,13 +7,13 @@ const transactionsSchema = new mongoose.Schema({
         maxlength: 15
     },
     transport_fare: {
-        type: String,
         required: true,
-        maxlength: 4
+        type: Number,
+        min: 0
     },
     new_balance: {
-        type: String,
-        maxlength: 7
+        type: Number,
+        min: 0
     }
 },{timestamps:true})
 

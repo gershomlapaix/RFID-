@@ -3,6 +3,9 @@ const Transactions = require('../models/rfid_transactions.model')
 const Registration = require('../models/rfid_register.model')
 const balance = require('../middlewares/getBalance')
 const cardExistence = require("../middlewares/cardExistence")
+const {
+    addCardInfo
+} = require("../middlewares/getBalance")
 
 const router = express.Router();
 
@@ -21,39 +24,41 @@ router.get('/', async (req, res) => {
 })
 
 
-router.post('/', async (req, res) => {
-    var currentBalance = 0;
+router.post('/', addCardInfo, async (req, res) => {
+    const card = req.card_info;
 
-    const card = await Registration.findOne({
-        UUID: req.body.UUID
-    })
+    if (card) {
+        const newTransaction = new Transactions({
+            UUID: card.UUID,
+            transport_fare: req.body.transport_fare,
+            new_balance: (card.initial_balance - req.body.transport_fare)
+        })
+        newTransaction.save()
+            .then(async() => {
+                await Registration.findOneAndUpdate({
+                    UUID: card.UUID
+                }, {
+                    initial_balance: newTransaction.new_balance
+                }, {
+                    useFindAndModify: false
+                })
+                return res.json({
+                    Message: `Transaction success...`
+                }).status(201)
+            })
+            .catch(err => console.log(err))
+    } else {
+        return res.json({
+            Message: `The card with UUID ${card.UUID} exists. Try another one`
+        })
+    }
+})
 
-    Registration.find({})
-    .then((getRegistrations) => {
-        currentBalance = parseInt(getRegistrations[0].initial_balance)
-        return currentBalance
-        // console.log(currentBalance)
-    })
-
-    // if (card) {
-    //     const newTransaction = new Transactions()
-    //     newTransaction.UUID = req.body.UUID;
-    //     newTransaction.transport_fare = parseInt(req.body.transport_fare)
-    //     // newTransaction.new_balance = (currentBalance - parseInt(req.body.transport_fare));
-
-    //     newTransaction.save()
-    //         .then(() => {
-    //             return res.json({
-    //                 Message: `Transaction success...`
-    //             }).status(201)
-    //         })
-    //         .catch(err => console.log(err))
-    // } else {
-    //     return res.json({
-    //         Message: `The card with UUID ${req.body.UUID} exists. Try another one`
-    //     })
-    // }
-    console.log(currentBalance)
+router.delete('/:id',async(req,res) =>{
+    Transactions.findByIdAndRemove(req.params.id)
+    .then(()=>{
+        return res.send('Successfully deleted')
+    }).catch(err =>{return res.send(err)})
 })
 
 module.exports = router

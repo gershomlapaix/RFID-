@@ -12,9 +12,9 @@ const registrationSchema = new mongoose.Schema({
         maxlength: 45
     },
     initial_balance: {
-        type: String,
+        type: Number,
         required: true,
-        maxlength: 7
+        min: 0
     }
 }, {
     timestamps: true
