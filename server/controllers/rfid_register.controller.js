@@ -32,4 +32,11 @@ router.post('/', async (req, res) => {
         })
     }
 })
+
+router.delete('/:id',async(req,res) =>{
+    Registration.findByIdAndRemove(req.params.id)
+    .then(()=>{
+        return res.send('Successfully deleted')
+    }).catch(err =>{return res.send(err)})
+})
 module.exports = router

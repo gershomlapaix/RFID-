@@ -9,6 +9,20 @@ const {
 
 const router = express.Router();
 
+// module.exports.getAllTransactions = async () => {
+//     await Transactions.find({})
+//         .then((all_transactions) => {
+//             return res.json({
+//                 ALL_TRANSACTIONS: all_transactions
+//             })
+//         })
+//         .catch(() => {
+//             return res.json({
+//                 Message: `Data not found..`
+//             })
+//         })
+// }
+
 router.get('/', async (req, res) => {
     Transactions.find({})
         .then((all_transactions) => {
@@ -34,7 +48,7 @@ router.post('/', addCardInfo, async (req, res) => {
             new_balance: (card.initial_balance - req.body.transport_fare)
         })
         newTransaction.save()
-            .then(async() => {
+            .then(async () => {
                 await Registration.findOneAndUpdate({
                     UUID: card.UUID
                 }, {
@@ -54,11 +68,13 @@ router.post('/', addCardInfo, async (req, res) => {
     }
 })
 
-router.delete('/:id',async(req,res) =>{
+router.delete('/:id', async (req, res) => {
     Transactions.findByIdAndRemove(req.params.id)
-    .then(()=>{
-        return res.send('Successfully deleted')
-    }).catch(err =>{return res.send(err)})
+        .then(() => {
+            return res.send('Successfully deleted')
+        }).catch(err => {
+            return res.send(err)
+        })
 })
 
 module.exports = router
