@@ -1,14 +1,17 @@
 import './App.css';
-// import IDRegister from './components/Register'
-// import TransactionsForm from './components/Transactions'
-import Home from './components/Home'
+import IDRegister from './components/Register'
+import Users from './components/Users'
+import Transact from './components/Transactions'
+// // import Home from './components/Home'
 
 function App() {
   return (
     <div>
-      {/* <IDRegister /> */}
+      {/* <Users/> */}
+      <IDRegister />
       {/* <TransactionsForm /> */}
-      <Home />
+      {/* <Transact/> */}
+      {/* <Home /> */}
     </div>
   );
 }

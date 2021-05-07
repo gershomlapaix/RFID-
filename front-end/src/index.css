@@ -6,7 +6,8 @@ body {
     /* font-family: 'Satisfy', cursive; */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background:'rgb(255, 250, 250)'
+  background:'rgb(255, 250, 250)';
+  color: black;
 }
 
 code {
