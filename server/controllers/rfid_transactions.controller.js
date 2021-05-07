@@ -9,19 +9,6 @@ const {
 
 const router = express.Router();
 
-// module.exports.getAllTransactions = async () => {
-//     await Transactions.find({})
-//         .then((all_transactions) => {
-//             return res.json({
-//                 ALL_TRANSACTIONS: all_transactions
-//             })
-//         })
-//         .catch(() => {
-//             return res.json({
-//                 Message: `Data not found..`
-//             })
-//         })
-// }
 
 router.get('/', async (req, res) => {
     Transactions.find({})
